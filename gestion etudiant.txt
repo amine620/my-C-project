@@ -1,0 +1,234 @@
+#include <stdio.h>
+#include <stdlib.h>
+/*#include <string.h>*/
+
+  struct Etudiant
+  {
+      int Num;
+      char Nom[100];
+      char Prenom[100];
+      char Filiere[50];
+  };
+struct Etudiant Etud;
+//========fonction de recherche===============
+int rech(int Numrech)
+{
+    FILE*F;
+    F=fopen("Etudiants.txt","r");
+    do
+    {
+        fscanf(F,"%d ;%s ;%s ;%s \n",&Etud.Num,&Etud.Nom,&Etud.Prenom,&Etud.Filiere);
+        fflush(stdin);
+        if(Etud.Num == Numrech)
+        {
+            fclose(F);
+            return 1;
+        }
+    }
+    while(!feof(F));
+    fclose(F);
+    return -1;
+}
+//==============procedure d'ajoute==========
+void AjouterEtudiant()
+{
+  int num;
+  FILE*F;
+  F=fopen("Etudiants.txt","a");
+  printf("entre le numero du nouveau etudiant:");
+  scanf("%d",&num);
+  fflush(stdin);
+  while(rech(num)== 1)
+  {
+      printf("\n ce numero existe deja");
+      printf("\n entrer le numero d'etudiant");
+      scanf("%d",&num);
+  }
+  Etud.Num=num;
+  printf("\n entre le Nom:");
+  gets(Etud.Nom);
+  fflush(stdin);
+  printf("\n entre le Prenom:");
+  gets(Etud.Prenom);
+  fflush(stdin);
+  printf("/n entree le filiere");
+  gets(Etud.Filiere);
+  fflush(stdin);
+      fprintf(F,"%d ;%s ;%s ;%s \n",Etud.Num,Etud.Nom,Etud.Prenom,Etud.Filiere);
+       //fflush(stdin);
+       close(F);
+  }
+//===============rechercher et affichage====================
+    void Rechercher()
+    {
+        int NumR;
+        printf("entrer le numero d'etudiant a rechercher\n ");
+        scanf("%d",&NumR);
+            FILE*F;
+       F=fopen("Etudiants.txt","r");
+       do
+       {
+            fscanf(F,"%d ;%s ;%s ;%s \n",&Etud.Num,&Etud.Nom,&Etud.Prenom,&Etud.Filiere);
+            if(NumR==Etud.Num);
+            {
+                printf("----- information sur l'etudiant:-------\n\n");
+                printf("Numero\t: %d \n",Etud.Num);
+                printf("Nom\t: %s\n",Etud.Nom);
+                printf("Prenom\t: %s\n",Etud.Prenom);
+                printf("Filiere\t: %s\n",Etud.Filiere);
+
+            }
+       }
+       while(!feof(F));
+       fclose(F);
+    }
+//===========================================
+//======== procedure de suppression===========
+    void SupprimerEtudiant()
+    {
+        char rep;
+        int NumRech;
+        printf("entrer le numero d'etudiant a supprimer");
+        scanf("%d",&NumRech);
+        fflush(stdin);
+        if(rech(NumRech)==1);
+        {
+           printf("\n voulez vous vraiment supprimer o/n?");
+           scanf("%c",&rep);
+           fflush(stdin);
+           if (rep=='o' || rep=='O')
+           {
+               FILE*Fich,*F;
+               F=fopen("Etudiants.txt","r");
+               Fich=fopen("TempEtudiant.txt","a");
+               do{
+                fscanf(F,"%d ;%s ;%s ;%s \n",&Etud.Num,&Etud.Nom,&Etud.Prenom,&Etud.Filiere);
+                if(NumRech!=Etud.Num)
+                {
+                fprintf(Fich,"%d ;%s ;%s ;%s \n",Etud.Num,Etud.Nom,Etud.Prenom,Etud.Filiere);
+                }
+               }
+               while(!feof(F));
+               fclose(Fich);
+               fclose(F);
+               remove("Etudiants.txt");
+               rename("TempEtudiant.txt","Etudiants.txt");
+               printf("supression effectueE avec succeEs");
+
+            }
+else
+{
+    printf("\n ce numero d'etudiant n'existe pas");
+}
+    }
+    }
+//========procedure modifier etudiants=========
+void ModifierEtudiant()
+{
+FILE*F,*Fich; int num,i;
+char rep='n';
+printf("\n entre le numero de l'etudiant a modifier");
+scanf("%d",&num);
+fflush(stdin);
+if(rech(num)==1)
+    {
+    printf("\n voulez vous vraiment modifier o/n ?");
+    scanf("%c",&rep);
+    fflush(stdin);
+    printf("%c",rep);
+     if (rep=='o' || rep=='O')
+     {
+        F=fopen("Etudiants.txt","r");
+        Fich=fopen("TempEtudiants.txt","a");
+        do{
+        fscanf(F,"%d ;%s ;%s ;%s \n",&Etud.Num,&Etud.Nom,&Etud.Prenom,&Etud.Filiere);
+            if(num==Etud.Num)
+                {
+                    Etud.Num=num;
+                    printf(" \n entre le nouveau Nom:");
+                    gets(Etud.Nom);
+                    printf(" \n entre le nouveau Prenom:");
+                    gets(Etud.Prenom);
+                    printf(" \n entre le nouveau Filiere \n");
+                    gets(Etud.Filiere);
+
+                }
+                fprintf(Fich,"%d ;%s ;%s ;%s \n",Etud.Num,Etud.Nom,Etud.Prenom,Etud.Filiere);
+                }
+                while(!feof(F));
+
+        fclose(F);
+        fclose(Fich);
+        remove("Etudiants.txt");
+        rename("TempEtudiants.txt","Etudiants.txt");
+        printf("\n la modification a reussi");
+        }
+        else
+        {
+            printf(" \n la modification a ete annule ");
+        }
+        }
+        else
+        {
+            printf("\n ce numero d'etudiant n'existe pas \n");
+        }
+}
+//===========procedure afficher=======
+void AfficherTt()
+{
+FILE*F;
+F=fopen("Etudiants.txt","r");
+printf("la liste des etudiants est: \n\n");
+printf("Numero\tNom\tPrenom\tFiliere\t");
+do
+{
+    fscanf(F,"%d ;%s ;%s ;%s \n",&Etud.Num,&Etud.Nom,&Etud.Prenom,&Etud.Filiere);
+    fflush(stdin);
+   printf("%d\t",Etud.Num);
+   printf("%s\t",Etud.Nom);
+   printf("%s\t",Etud.Prenom);
+   printf("%s\n",Etud.Filiere);
+}
+while(!feof(F));
+fclose(F);
+}
+//======== menu principale==================
+void main()
+{
+    int choix;
+    char rep;
+    do
+    {
+        system("cls");
+        printf("***********MENU*************\n");
+        printf("1- Ajouter un Etudiant\n");
+        printf("2- Rechercher un Etudiant\n");
+        printf("3- Suprimer un Etudiant\n");
+        printf("4- Modifier un Etudiant\n");
+        printf("5- Afficher tous les etudiants\n");
+        printf("6- Quitter \n\n");
+        do
+        {
+            printf("\n -Entre votre choix");
+            scanf("%d",&choix);
+        }
+        while(choix<1 || choix>6);
+        switch(choix)
+        {
+            case 1: AjouterEtudiant();
+            break;
+            case 2: Rechercher();
+            break;
+            case 3: SupprimerEtudiant();
+            break;
+            case 4: ModifierEtudiant();
+            break;
+            case 5: AfficherTt();
+            break;
+            case 6: break;
+        }
+        printf("voulez vous continuer o/n");
+        scanf("%s",&rep);
+        fflush(stdin);
+    }
+    while(rep=='o' || rep=='O');}
